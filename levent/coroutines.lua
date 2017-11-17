@@ -9,11 +9,17 @@ local total = 0
 
 local function co_raw_create()
     local co
+    -- 创建协作线程
     co = coroutine.create(function(f)
+        -- 接收一个函数做参数
+        -- 先自行yield掉，这样该线程在外面的resume后可以得到外部传入的参数
+        -- 创建后线程是处在paused状态
         f(coroutine.yield()) -- if error in f, running would keeps
         while true do
             coroutine_pool[#coroutine_pool + 1] = co
+            -- 另一个coroutine resume的时候会传入函数
             local f = coroutine.yield()
+            -- 再次yield等待参数
             f(coroutine.yield())
         end
     end)
@@ -22,9 +28,12 @@ local function co_raw_create()
 end
 
 local function co_create(f)
+    -- 如果pool数量为空
+    -- 创建新
     if #coroutine_pool == 0 then
         co_raw_create()
     end
+    -- 从表中移走最后一个协作线程
     local co = table.remove(coroutine_pool)
     coroutine.resume(co, f)
     return co
@@ -56,4 +65,3 @@ function coroutines.cached()
     return #coroutine_pool
 end
 return coroutines
-

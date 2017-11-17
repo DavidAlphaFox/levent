@@ -11,6 +11,8 @@ local Hub = class("Hub")
 local cancel_wait_error = exceptions.CancelWaitError.new()
 
 function Hub:_init()
+    -- 得到正在运行的线程
+    -- 并判断是否在主线程内
     local co, main = coroutine.running()
     assert(main, "must in main coroutine")
     self.co = co
@@ -112,7 +114,7 @@ function Waiter:throw(exception)
     self:_switch(nil, exception)
 end
 
--- for 
+-- for
 function Waiter:__call(value)
     self:_switch(value, nil)
 end
@@ -132,4 +134,3 @@ end
 
 local hub = Hub.new()
 return hub
-

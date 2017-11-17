@@ -36,8 +36,12 @@ local Socket = class("Socket")
 function Socket:_init(cobj)
     assert(type(cobj.fileno) == "function", cobj)
     self.cobj = cobj
+    -- 设置为非blocking模式
     self.cobj:setblocking(false)
+    -- 绑定loop
     local loop = hub.loop
+    -- 设置event
+    -- 直接将自己放到loop上
     self._read_event = loop:io(self.cobj:fileno(), loop.EV_READ)
     self._write_event = loop:io(self.cobj:fileno(), loop.EV_WRITE)
     -- timeout
@@ -77,7 +81,7 @@ function Socket:listen(backlog)
     return true
 end
 
-function Socket:_need_block(err) 
+function Socket:_need_block(err)
     if self.timeout == 0 then
         return false
     end
@@ -89,7 +93,7 @@ function Socket:_need_block(err)
     return true
 end
 
-function Socket:accept() 
+function Socket:accept()
     local csock, err
     while true do
         csock, err = self.cobj:accept()
@@ -134,7 +138,7 @@ end
 
 -- args: len
 function Socket:recv(len)
-    return self:_recv(self.cobj.recv, len) 
+    return self:_recv(self.cobj.recv, len)
 end
 
 function Socket:_send(func, ...)
@@ -160,7 +164,7 @@ function Socket:send(data, from)
     return self:_send(self.cobj.send, data, from)
 end
 
--- args: 
+-- args:
 function Socket:sendto(ip, port, data, from)
     return self:_send(self.cobj.sendto, ip, port, data, from)
 end
@@ -235,4 +239,3 @@ function socket.socket(family, _type, protocol)
 end
 
 return setmetatable(socket, {__index = c} )
-

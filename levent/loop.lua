@@ -2,12 +2,14 @@ local class = require "levent.class"
 local ev = require "levent.ev.c"
 
 local function callback(func, ...)
+    -- 参数大于0的时候，创建一个新函数封装返回
     if select("#", ...) > 0 then
         local args = {...}
         return function()
             func(table.unpack(args))
         end
     end
+    -- 没有参数的时候，直接返回函数自己
     return func
 end
 
@@ -78,10 +80,13 @@ local watcher_cls = {
 
 local Loop = class("Loop")
 function Loop:_init()
+    -- 创建默认的event loop
     self.cobj = ev.default_loop()
+    -- 创建watcher 表
     self.watchers = setmetatable({}, {__mode="v"})
 
     -- register prepare
+    -- 创建callback表
     self._callbacks = {}
     self._prepare = self:_create_watcher("prepare")
     self._prepare:start(function(revents)
@@ -115,7 +120,7 @@ function Loop:_add_watchers(w)
     mt.__tostring = function(self)
         return tostring(self.cobj)
     end
-
+    -- 修改gc函数
     mt.__gc = function(self)
         self:stop()
     end
@@ -182,4 +187,3 @@ function loop.new(...)
 end
 
 return loop
-
