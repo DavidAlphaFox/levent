@@ -39,11 +39,11 @@ INLINE static loop_t* get_loop(lua_State *L, int index) {
 }
 
 INLINE static void setloop(lua_State *L, struct ev_loop *loop) {
-    loop_t *lo = (loop_t*)lua_newuserdata(L, sizeof(loop_t));
-    luaL_getmetatable(L, LOOP_METATABLE);
-    lua_setmetatable(L, -2);
+  loop_t *lo = (loop_t*)lua_newuserdata(L, sizeof(loop_t)); //新用户数据
+  luaL_getmetatable(L, LOOP_METATABLE); //得到特定的METATABLE
+  lua_setmetatable(L, -2);//将lo放到metatable上
 
-    lo->loop = loop;
+  lo->loop = loop;//设置lo的内部loop
 }
 
 static int 

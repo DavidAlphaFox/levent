@@ -15,10 +15,10 @@ end
 
 local Watcher = class("Watcher")
 function Watcher:_init(name, loop, ...)
-    self.loop = loop
+    self.loop = loop -- 和loop进行绑定
     local w = ev["new_" .. name]()
-    w:init(...)
-    self.cobj = w
+    w:init(...) --进行event初始化
+    self.cobj = w -- 关联C对象
 
     self._cb = nil
     self._args = nil

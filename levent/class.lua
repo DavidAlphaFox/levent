@@ -3,7 +3,7 @@
 -- date: 2014-07-17
 --]]
 local c = require "levent.c"
-
+-- class是一个table，它的metatable指向自己
 local class = {}
 setmetatable(class, class)
 
@@ -51,7 +51,7 @@ local function _class(name, base)
     cls.__name = name
 
     if type(base) == "table" then
-        setmetatable(cls, base)
+        setmetatable(cls, base) --如果是table类型就把cls的metatable设置成base
         cls.__base = base
     end
 
