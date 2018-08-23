@@ -35,7 +35,7 @@ function Watcher:start(func, ...)
     if select("#", ...) > 0 then
         self._args = table.pack(...)
     end
-    self.cobj:start(self.loop.cobj)
+    self.cobj:start(self.loop.cobj) --注册自身到loop上
 end
 
 function Watcher:stop()

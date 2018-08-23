@@ -191,14 +191,14 @@ LOOP_METHOD_UNSIGNED(pending_count)
 //  1: loop
 static int loop_run(lua_State *L) {
     struct ev_loop *loop;
-    loop_t *lo = get_loop(L, 1);
-    int flags = luaL_checkinteger(L, 2);
+    loop_t *lo = get_loop(L, 1); //获取loop
+    int flags = luaL_checkinteger(L, 2);//得到标记
     luaL_checktype(L, 3, LUA_TFUNCTION);
     luaL_checkany(L, 4);
     lua_pushcfunction(L, traceback);
 
     loop = lo->loop;
-    ev_set_userdata(loop, L);
+    ev_set_userdata(loop, L);//站位？
     lua_pushboolean(L, ev_run(loop, flags));
     ev_set_userdata(loop, NULL);
     return 1;

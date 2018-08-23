@@ -274,7 +274,7 @@ _sock_connect(lua_State *L) {
         lua_pushinteger(L, err);
         return 1;
     }
-
+    // 此处是非异步进行的
     err = connect(sock->fd, res->ai_addr, res->ai_addrlen);
     freeaddrinfo(res);
 

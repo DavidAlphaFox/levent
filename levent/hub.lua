@@ -75,7 +75,7 @@ function Hub:_yield(waiter)
     coroutine.yield()
     self.waiters[co] = nil
 end
-
+-- 启动loop
 function Hub:run()
     self.loop:run()
 end
